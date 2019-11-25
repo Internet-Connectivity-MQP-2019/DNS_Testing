@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LANG="C"
+
 JOB_COUNT=32
 
 MAXMIND_DB="GeoIP2-City.mmdb"
