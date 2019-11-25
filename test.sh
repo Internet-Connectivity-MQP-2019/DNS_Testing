@@ -23,8 +23,8 @@ echo "ip_address,domain" > results/authoritative_confirmed.csv
 echo "Steps 3&4"
 if python -c "import geoip2" &> /dev/null; then
     echo "ip_address,state,latitute,longitude,zip" > results/geolocation.csv
-    ./geolocation.py results/recursive_confirmed.csv $MAXMIND_DB >> results/geolocation.csv
-    ./geolocation.py results/authoritative_confirmed.csv $MAXMIND_DB >> results/geolocation.csv
+    ./geolocation.py $MAXMIND_DB results/recursive_confirmed.csv >> results/geolocation.csv
+    ./geolocation.py $MAXMIND_DB results/authoritative_confirmed.csv >> results/geolocation.csv
 else
     echo 'Geolocation requires the python module "geoip2". Either run ./geolocation.sh on a different machine, or install the module.'
 fi

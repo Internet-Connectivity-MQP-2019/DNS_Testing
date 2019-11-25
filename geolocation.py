@@ -5,10 +5,17 @@ import geoip2.database
 
 def geolocate_ips(database, filename):
     geoip = geoip2.database.Reader(database)
-
+    
+    i = 0
     with open(filename) as file:
         for line in file:
-            ip = line.rstrip("\n")
+            i += 1
+            
+            # Ignore header
+            if i == 1:
+                continue
+
+            ip = line.rstrip("\n").split(",")[0]
 
             try:
                 response = geoip.city(ip)
