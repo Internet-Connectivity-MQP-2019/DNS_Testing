@@ -22,7 +22,7 @@ echo "ip_address,domain" > results/authoritative_confirmed.csv
 
 echo "Steps 3&4"
 if python -c "import geoip2" &> /dev/null; then
-    echo "ip_address,state,latitute,longitude,zip" > results/geolocation.csv
+    echo "ip_address,state,latitude,longitude,zip" > results/geolocation.csv
     ./geolocation.py $MAXMIND_DB results/recursive_confirmed.csv >> results/geolocation.csv
     ./geolocation.py $MAXMIND_DB results/authoritative_confirmed.csv >> results/geolocation.csv
 else
