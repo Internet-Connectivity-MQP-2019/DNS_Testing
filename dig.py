@@ -52,7 +52,10 @@ def run_dig(domain, target_server=None, time=5, tries=1, stats=True, norecurse=F
     raw = run(args, stdout=subprocess.PIPE)[1]
     output = raw.decode('utf-8')
 
-    return DigResults.parse(output)
+    try:
+        return DigResults.parse(output)
+    except AttributeError:
+        raise Exception('AttributeError', output)
 
 
 class DigResults:
