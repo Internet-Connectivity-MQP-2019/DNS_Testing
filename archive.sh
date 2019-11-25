@@ -1,4 +1,4 @@
 #!/bin/bash
 
-zip -r "results_$(date +"%Y-%m-%d").zip" results
+zip -r "results_$(date +"%s").zip" results
 rm results/*.csv
