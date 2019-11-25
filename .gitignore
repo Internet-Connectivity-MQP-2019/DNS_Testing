@@ -1,0 +1,6 @@
+*.mmdb
+parallel
+results/*.csv
+results_*.zip
+.idea
+venv
