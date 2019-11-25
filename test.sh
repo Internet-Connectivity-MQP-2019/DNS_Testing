@@ -32,7 +32,7 @@ echo "ip_address,median,mean,standard_deviation,variance" > results/recursive_re
 ./parallel -a results/recursive_confirmed.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./recursive_reliability.py {1} $RECURSIVE_RELIABILITY_DOMAIN $RECURSIVE_RELIABILITY_TRIAL_COUNT >> results/recursive_reliability_results.csv
 
 echo "Step 6"
-echo "ip_address,median,mean,standard_deviation,variance" > authoritative_reliability_results.csv
+echo "ip_address,median,mean,standard_deviation,variance" > results/authoritative_reliability_results.csv
 ./parallel -a results/authoritative_confirmed.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./authoritative_reliability.py {1} {2} $AUTHORITATIVE_RELIABILITY_TRIAL_COUNT >> results/authoritative_reliability_results.csv
 
 echo "Step 7"
