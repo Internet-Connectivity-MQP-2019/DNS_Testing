@@ -108,7 +108,7 @@ class DigResults:
 
         output = output.replace("\n", "")
 
-        successful = ";; connection timed out" in output
+        successful = ";; connection timed out" not in output
         if not successful:  # Connection timed out, no point in continuing
             return None
 
