@@ -6,7 +6,7 @@ from itertools import product
 
 def file_to_list(filename):
     with open(filename) as inputFile:
-        return [l.rstrip("\n") for l in inputFile]
+        return [l.rstrip("\n") for l in inputFile][1:]
 
 
 if __name__ == "__main__":
