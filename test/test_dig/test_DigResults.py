@@ -33,6 +33,12 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(len(result1.authority_section), 0)
         self.assertEqual(len(result1.answer_section), 5)
 
+        self.assertEqual("status: NOERROR, query time: 24, message size: 143, responding server: 8.8.8.8, " +
+                         "ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 1" +
+                         "\n\tANSWER section: ['[name: www.cnn.com., ttl: 261, class=IN, type=CNAME, ip=turner-tls.map.fastly.net.]', '[name: turner-tls.map.fastly.net., ttl: 29, class=IN, type=A, ip=151.101.1.67]', '[name: turner-tls.map.fastly.net., ttl: 29, class=IN, type=A, ip=151.101.65.67]', '[name: turner-tls.map.fastly.net., ttl: 29, class=IN, type=A, ip=151.101.129.67]', '[name: turner-tls.map.fastly.net., ttl: 29, class=IN, type=A, ip=151.101.193.67]']" +
+                         "\n\tAUTHORITY section: []" +
+                         "\n\tADDITIONAL section: []", str(result1))
+
     def testParseFullWithAuthority(self):
         test2 = read_to_str('sample_dig2.txt')
         result2 = DigResults.parse(test2)
