@@ -191,7 +191,7 @@ class DigSectionLine:
 
     @staticmethod
     def parse(line):
-        regex = re.compile(r'^(.*) +(\d)+ +([A-Z]+) +([A-Z]+) +(.*)')
+        regex = re.compile(r'^(\S+) +(\d+) +([A-Z]+) +([A-Z]+) +(.*)')
 
         result = regex.match(line)
         if result is not None:
