@@ -2,27 +2,6 @@ import re
 import subprocess
 
 
-def run(*args, input_pipe=None, check=False, **kwargs):
-    if input_pipe is not None:
-        if 'stdin' in kwargs:
-            raise ValueError('stdin and input arguments may not both be used.')
-        kwargs['stdin'] = subprocess.PIPE
-
-    process = subprocess.Popen(*args, **kwargs)
-    try:
-        stdout, stderr = process.communicate(input_pipe)
-    except TimeoutError:
-        process.kill()
-        process.wait()
-        raise
-
-    return_code = process.poll()
-    if check and return_code:
-        raise subprocess.CalledProcessError(
-            return_code, process.args, output=stdout, stderr=stderr)
-    return return_code, stdout, stderr
-
-
 def run_dig(domain, target_server=None, time=5, tries=1, stats=True, norecurse=False):
     """
     Execute a dig command
@@ -49,7 +28,10 @@ def run_dig(domain, target_server=None, time=5, tries=1, stats=True, norecurse=F
         args.append("+norecurse")
 
     # Run and decode
-    raw = run(args, stdout=subprocess.PIPE)[1]
+    process = subprocess.Popen(args, stdout=subprocess.PIPE)
+    stdout, _ = process.communicate(None)
+    raw = stdout
+
     output = raw.decode('utf-8')
 
     try:
@@ -59,9 +41,9 @@ def run_dig(domain, target_server=None, time=5, tries=1, stats=True, norecurse=F
 
 
 class DigResults:
-    def __init__(self, answer=0, authority=0, additional=0, status=None, responding_server=None,
-                 answer_section=None, authority_section=None, additional_section=None, query_time=0,
-                 msg_size=0, recursion_not_available=False):
+    def __init__(self, answer, authority, additional, status, responding_server,
+                 answer_section, authority_section, additional_section, query_time,
+                 msg_size, recursion_not_available):
         """
 
         :param answer: integer: number of answer section responses
@@ -85,20 +67,9 @@ class DigResults:
         self.ADDITIONAL = additional
         self.status = status
         self.responding_server = responding_server
-        if additional_section is None:
-            self.additional_section = []
-        else:
-            self.additional_section = additional_section
-
-        if authority_section is None:
-            self.authority_section = []
-        else:
-            self.authority_section = authority_section
-
-        if answer_section is None:
-            self.answer_section = []
-        else:
-            self.answer_section = answer_section
+        self.additional_section = additional_section
+        self.authority_section = authority_section
+        self.answer_section = answer_section
 
     @staticmethod
     def parse(output):
@@ -109,10 +80,10 @@ class DigResults:
         """
         lines = output.split("\n")
 
-        output = output.replace("\n", "")
+        output = output.replace("\n", " ")
 
         successful = ";; connection timed out" not in output
-        if not successful:  # Connection timed out, no point in continuing
+        if len(output) == 0 or not successful:  # Connection timed out, no point in continuing
             return None
 
         status = re.match(r'.*status: ([A-Z]+),.*', output).group(1)
