@@ -1,8 +1,10 @@
+import os
 import unittest
 from dig import DigResults
 
 
 def read_to_str(filename):
+    filename = os.path.join(os.path.dirname(__file__), filename)
     with open(filename, 'r') as file:
         return file.read()
 
