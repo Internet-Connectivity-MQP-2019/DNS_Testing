@@ -9,7 +9,7 @@ def file_to_list(filename):
         return [l.rstrip("\n") for l in inputFile][1:]
 
 
-if __name__ == "__main__":
+def generate_pairs(file1, file2):
     recursive = file_to_list(sys.argv[1])
     authoritative = file_to_list(sys.argv[2])
 
@@ -18,3 +18,7 @@ if __name__ == "__main__":
 
     for r, a in test_pairs:
         print("{},{}".format(r, a))
+
+
+if __name__ == "__main__":
+    generate_pairs(sys.argv[1], sys.argv[2])
