@@ -13,7 +13,7 @@ def test_reliability(target_ip, domain, trials):
         if result is not None and result.status == "NOERROR" and result.AUTHORITY > 0:
             results.append(result.query_time)
 
-    if len(results) > 2:
+    if len(results) >= 2:
         print("{},{}".format(target_ip, generate_statistics(results)))
 
 
