@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export LANG="C"
+
 if [ ! -f results/geolocation.csv ]; then
     echo "Geolocation file required!"
     exit 1
@@ -16,4 +18,4 @@ echo "authoritative_ip" > results/reliable_authoritative_ips.csv
 
 echo "Step 11"
 echo "recursive_state,authoritative_state,min_rtt,max_rtt,mean_rtt,median_rtt" > results/aggregatio_state_to_state.csv
-./aggregate_state_to_state /test_results.csv results/reliable_recursive_ips.csv results/reliable_authoritative_ips.csv results/geolocation.csv >> results/aggregatio_state_to_state.csv
+./aggregate_state_to_state.py /test_results.csv results/reliable_recursive_ips.csv results/reliable_authoritative_ips.csv results/geolocation.csv >> results/aggregatio_state_to_state.csv
