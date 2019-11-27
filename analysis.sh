@@ -19,4 +19,4 @@ echo "authoritative_ip" > results/reliable_authoritative_ips.csv
 
 echo "Step 11"
 echo "recursive_state,authoritative_state,min_rtt,max_rtt,mean_rtt,median_rtt" > results/aggregation_state_to_state.csv
-./aggregate_state_to_state.py /test_results.csv results/reliable_recursive_ips.csv results/reliable_authoritative_ips.csv results/geolocation.csv >> results/aggregation_state_to_state.csv
+./aggregate_state_to_state.py results/test_results.csv results/reliable_recursive_ips.csv results/reliable_authoritative_ips.csv results/geolocation.csv >> results/aggregation_state_to_state.csv
