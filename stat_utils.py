@@ -16,3 +16,7 @@ def generate_statistics(data):
         data_variance = "{:.2f}".format(variance(data))
 
     return "{},{},{},{}".format(data_mean, data_median, data_stdev, data_variance)
+
+
+def calculate_coefficient_of_variation(mean, stdev):
+    return stdev/mean
