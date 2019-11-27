@@ -9,12 +9,13 @@ RECURSIVE_CONFIRMATION_DOMAIN="cnn.com"
 RECURSIVE_RELIABILITY_DOMAIN="cnn.com"
 RECURSIVE_RELIABILITY_TRIAL_COUNT=10
 AUTHORITATIVE_RELIABILITY_TRIAL_COUNT=10
-TEST_TRIAL_COUNT="3"
-TEST_TRY_COUNT="3"
+TEST_TRIAL_COUNT="1"
+TEST_TRY_COUNT="2"
+TIMEOUT="5"
 
 echo $(date +"%s") > results/TEST_START
 
-echo "MAXMIND_DB: $MAXMIND_DB\nRECURSIVE_CONFIRMATION_DOMAIN: $RECURSIVE_CONFIRMATION_DOMAIN\nRECURSIVE_RELIABILITY_DOMAIN: $RECURSIVE_RELIABILITY_DOMAIN\nRECURSIVE_RELIABILITY_TRIAL_COUNT: $RECURSIVE_RELIABILITY_TRIAL_COUNT\nAUTHORITATIVE_RELIABILITY_TRIAL_COUNT: $AUTHORITATIVE_RELIABILITY_TRIAL_COUNT\nTEST_TRIAL_COUNT: $TEST_TRIAL_COUNT\nTEST_TRY_COUNT: $TEST_TRY_COUNT" > CONFIG
+echo "MAXMIND_DB: $MAXMIND_DB\nRECURSIVE_CONFIRMATION_DOMAIN: $RECURSIVE_CONFIRMATION_DOMAIN\nRECURSIVE_RELIABILITY_DOMAIN: $RECURSIVE_RELIABILITY_DOMAIN\nRECURSIVE_RELIABILITY_TRIAL_COUNT: $RECURSIVE_RELIABILITY_TRIAL_COUNT\nAUTHORITATIVE_RELIABILITY_TRIAL_COUNT: $AUTHORITATIVE_RELIABILITY_TRIAL_COUNT\nTEST_TRIAL_COUNT: $TEST_TRIAL_COUNT\nTEST_TRY_COUNT: $TEST_TRY_COUNT\nTIMEOUT: $TIMEOUT" > CONFIG
 
 cp candidates/recursive_candidates.csv results/
 cp candidates/authoritative_candidates.csv results/
@@ -49,8 +50,8 @@ echo "recursive_ip,authoritative_ip,domain" > results/test_pairs.csv
 ./generate_pairs.py results/recursive_confirmed.csv results/authoritative_confirmed.csv $TEST_TRIAL_COUNT >> results/test_pairs.csv
 
 echo "Step 8"
-echo "recursive_ip,authoritative_ip,rtt" > results/test_results.csv
-./parallel -a results/test_pairs.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./run_test.py {1} {2} {3} $TEST_TRY_COUNT >> results/test_results.csv
+echo "recursive_ip,authoritative_ip,latency,total,rtt" > results/test_results.csv
+./parallel -a results/test_pairs.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./run_test.py {1} {2} {3} $TEST_TRY_COUNT $TIMEOUT >> results/test_results.csv
 
 echo $(date +"%s") > results/TEST_END
 

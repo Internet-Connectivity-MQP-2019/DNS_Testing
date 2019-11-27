@@ -43,7 +43,7 @@ def aggregate(results_filename, reliable_rec_filename, reliable_auth_filename, g
                 if auth_state not in aggregated_results[rec_state]:
                     aggregated_results[rec_state][auth_state] = []
 
-                aggregated_results[rec_state][auth_state].append(int(row[2]))
+                aggregated_results[rec_state][auth_state].append(int(row[4]))
 
     for i in sorted(aggregated_results.keys()):
         for j in sorted(aggregated_results[i].keys()):

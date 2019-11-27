@@ -53,4 +53,7 @@ def run_test(recursive_ip, auth_ip, domain, tries):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 5:
+        TIME_LIMIT = int(sys.argv[5])
+
     run_test(sys.argv[1], sys.argv[2], sys.argv[3], int(sys.argv[4]))
