@@ -4,3 +4,5 @@ results/*.csv
 results_*.zip
 .idea
 venv
+archive/*.zip
+archive/*.csv
