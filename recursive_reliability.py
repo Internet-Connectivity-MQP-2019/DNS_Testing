@@ -18,7 +18,7 @@ def test_reliability(recursive_ip, domain, trials):
                 and result.ANSWER > 0 and result.AUTHORITY == 0:
             results.append(result.query_time)
 
-    if len(results) > 2:
+    if len(results) >= 2:
         print("{},{}".format(recursive_ip, generate_statistics(results)))
 
 
