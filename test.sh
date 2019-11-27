@@ -12,13 +12,18 @@ AUTHORITATIVE_RELIABILITY_TRIAL_COUNT=10
 TEST_TRIAL_COUNT="3"
 TEST_TRY_COUNT="3"
 
+echo $(date +"%s") > results/TEST_START
+
+cp candidates/recursive_candidates.csv results/
+cp candidates/authoritative_candidates.csv results/
+
 echo "Step 1"
 echo "ip_address" > results/recursive_confirmed.csv
-./parallel -a candidates/recursive_candidates.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./confirm_recursive.py {1} $RECURSIVE_CONFIRMATION_DOMAIN >> results/recursive_confirmed.csv
+./parallel -a results/recursive_candidates.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./confirm_recursive.py {1} $RECURSIVE_CONFIRMATION_DOMAIN >> results/recursive_confirmed.csv
 
 echo "Step 2"
 echo "ip_address,domain" > results/authoritative_confirmed.csv
-./parallel -a candidates/authoritative_candidates.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./confirm_authoritative.py {2} {1} >> results/authoritative_confirmed.csv
+./parallel -a results/authoritative_candidates.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./confirm_authoritative.py {2} {1} >> results/authoritative_confirmed.csv
 
 echo "Steps 3&4"
 if python -c "import geoip2" &> /dev/null; then
@@ -44,3 +49,5 @@ echo "recursive_ip,authoritative_ip,domain" > results/test_pairs.csv
 echo "Step 8"
 echo "recursive_ip,authoritative_ip,rtt" > results/test_results.csv
 ./parallel -a results/test_pairs.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./run_test.py {1} {2} {3} $TEST_TRY_COUNT >> results/test_results.csv
+
+echo $(date +"%s") > results/TEST_END
