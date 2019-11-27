@@ -14,10 +14,7 @@ def expand_filename(filename):
 class MockResponse(object):
     def __init__(self, d):
         for a, b in d.items():
-            if isinstance(b, (list, tuple)):
-               setattr(self, a, [MockResponse(x) if isinstance(x, dict) else x for x in b])
-            else:
-               setattr(self, a, MockResponse(b) if isinstance(b, dict) else b)
+           setattr(self, a, MockResponse(b) if isinstance(b, dict) else b)
 
 
 # country, state, latitude, longitude, code

@@ -79,7 +79,7 @@ class MyTestCase(unittest.TestCase):
     @patch.object(authoritative_reliability, 'generate_statistics')
     @patch.object(authoritative_reliability, 'run_dig')
     @patch('builtins.print')
-    def test_threeTrials_oneResult(self, mock_print, mock_run_dig, mock_gen_stats):
+    def test_threeTrials_multipleResults(self, mock_print, mock_run_dig, mock_gen_stats):
         mock_run_dig.side_effect = [dig.DigResults(answer=0, authority=4, additional=0, status="NOERROR",
                                                    responding_server="", answer_section=[], authority_section=[],
                                                    additional_section=[], query_time=4, msg_size=0,
