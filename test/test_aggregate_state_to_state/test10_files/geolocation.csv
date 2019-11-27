@@ -1,0 +1,13 @@
+ip_address,state,latitude,longitude,zip
+rec_1,Georgia,1,-1,12345
+rec_2,Idaho,1,-1,12345
+rec_3,New Hampshire,1,-1,12345
+rec_4,Vermont,1,-1,12345
+rec_5,Idaho,1,-1,12345
+rec_6,Wyoming,1,-1,12345
+auth_1,Wyoming,-1,1,54321
+auth_2,Alaska,-1,1,54321
+auth_3,Arizona,-1,1,54321
+auth_4,Wyoming,-1,1,54321
+auth_5,North Dakota,-1,1,54321
+auth_6,Wyoming,-1,1,54321

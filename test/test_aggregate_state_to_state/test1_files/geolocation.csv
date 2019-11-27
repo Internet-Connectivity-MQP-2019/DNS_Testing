@@ -1,0 +1,3 @@
+ip_address,state,latitude,longitude,zip
+rec_1,New York,1,-1,12345
+auth_1,Wyoming,-1,1,54321

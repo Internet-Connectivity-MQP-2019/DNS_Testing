@@ -1,3 +1,5 @@
+#!/usr/bin/python3.4
+
 import sys
 from stat_utils import calculate_coefficient_of_variation
 

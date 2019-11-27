@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 export LANG="C"
 
@@ -53,3 +53,5 @@ echo "recursive_ip,authoritative_ip,rtt" > results/test_results.csv
 ./parallel -a results/test_pairs.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./run_test.py {1} {2} {3} $TEST_TRY_COUNT >> results/test_results.csv
 
 echo $(date +"%s") > results/TEST_END
+
+./analysis.sh
