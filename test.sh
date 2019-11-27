@@ -13,7 +13,8 @@ TEST_TRIAL_COUNT="1"
 TEST_TRY_COUNT="2"
 TIMEOUT="5"
 
-echo $(date +"%Y%m%d_%H%M%S") > results/TEST_START
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+echo $TIMESTAMP > results/TEST_START
 
 echo "MAXMIND_DB: $MAXMIND_DB\nRECURSIVE_CONFIRMATION_DOMAIN: $RECURSIVE_CONFIRMATION_DOMAIN\nRECURSIVE_RELIABILITY_DOMAIN: $RECURSIVE_RELIABILITY_DOMAIN\nRECURSIVE_RELIABILITY_TRIAL_COUNT: $RECURSIVE_RELIABILITY_TRIAL_COUNT\nAUTHORITATIVE_RELIABILITY_TRIAL_COUNT: $AUTHORITATIVE_RELIABILITY_TRIAL_COUNT\nTEST_TRIAL_COUNT: $TEST_TRIAL_COUNT\nTEST_TRY_COUNT: $TEST_TRY_COUNT\nTIMEOUT: $TIMEOUT" > CONFIG
 
@@ -56,3 +57,7 @@ echo "recursive_ip,authoritative_ip,latency,total,rtt" > results/test_results.cs
 echo $(date +"%s") > results/TEST_END
 
 ./analysis.sh
+
+./archive.sh
+
+echo "DNS test started at $TIMESTAMP and is now complete! Results filepath is: $(echo $PWD)/results_$TIMESTAMP.zip" | nail -s "DNS Test Complete" stgoldman@wpi.edu
