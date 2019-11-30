@@ -13,6 +13,7 @@ TEST_TRIAL_COUNT="5"
 TEST_TRY_COUNT="3"
 TIMEOUT="3"
 MAX_COV="0.2"
+COV_MAX="0.2"
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 echo $TIMESTAMP > results/TEST_START
