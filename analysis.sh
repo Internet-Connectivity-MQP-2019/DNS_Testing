@@ -7,7 +7,7 @@ if [ ! -f results/geolocation.csv ]; then
     exit 1
 fi
 
-COV_MAX="0.05"
+COV_MAX="0.2"
 JOB_COUNT=32
 
 echo "Steps 9 & 10"

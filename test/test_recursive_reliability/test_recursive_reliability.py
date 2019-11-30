@@ -16,7 +16,7 @@ class MyTestCase(unittest.TestCase):
                                                    additional_section=[], query_time=120, msg_size=0,
                                                    recursion_not_available=False)]
 
-        recursive_reliability.test_reliability("a", "b", 0)
+        recursive_reliability.test_reliability("a", "b", 0, 999)
 
         # Primer still runs
         self.assertEqual(1, mock_run_dig.call_count)
@@ -39,7 +39,7 @@ class MyTestCase(unittest.TestCase):
                                                    additional_section=[], query_time=240, msg_size=0,
                                                    recursion_not_available=False)                                    ]
 
-        recursive_reliability.test_reliability("b", "a", 1)
+        recursive_reliability.test_reliability("b", "a", 1, 999)
 
         # Primer still runs
         dig_count = 2
@@ -76,7 +76,7 @@ class MyTestCase(unittest.TestCase):
                                                    additional_section=[], query_time=120, msg_size=0,
                                                    recursion_not_available=False)]
 
-        recursive_reliability.test_reliability("b", "a", 5)
+        recursive_reliability.test_reliability("b", "a", 5, 999)
 
         # Primer still runs
         dig_count = 6
@@ -110,7 +110,7 @@ class MyTestCase(unittest.TestCase):
 
         mock_gen_stats.side_effect = ["generated_stats_go_here"]
 
-        recursive_reliability.test_reliability("b", "a", 3)
+        recursive_reliability.test_reliability("b", "a", 3, 999)
 
         # Primer still runs
         dig_count = 4
@@ -122,3 +122,41 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(1, mock_print.call_count)
         mock_print.assert_has_calls([call("b,generated_stats_go_here")])
+
+    @patch.object(recursive_reliability, 'calculate_coefficient_of_variation')
+    @patch.object(recursive_reliability, 'generate_statistics')
+    @patch.object(recursive_reliability, 'run_dig')
+    @patch('builtins.print')
+    def test_threeTrials_multipleResultsBadCov(self, mock_print, mock_run_dig, mock_gen_stats, mock_calculate_cov):
+        mock_run_dig.side_effect = [dig.DigResults(answer=5, authority=0, additional=0, status="NOERROR",
+                                                   responding_server="", answer_section=[], authority_section=[],
+                                                   additional_section=[], query_time=4, msg_size=0,
+                                                   recursion_not_available=False),
+                                    dig.DigResults(answer=5, authority=0, additional=0, status="NOERROR",
+                                                   responding_server="", answer_section=[], authority_section=[],
+                                                   additional_section=[], query_time=2, msg_size=0,
+                                                   recursion_not_available=False),
+                                    dig.DigResults(answer=5, authority=0, additional=0, status="NOERROR",
+                                                   responding_server="", answer_section=[], authority_section=[],
+                                                   additional_section=[], query_time=4, msg_size=0,
+                                                   recursion_not_available=False),
+                                    dig.DigResults(answer=5, authority=0, additional=0, status="NOERROR",
+                                                   responding_server="", answer_section=[], authority_section=[],
+                                                   additional_section=[], query_time=2, msg_size=0,
+                                                   recursion_not_available=False)]
+
+        mock_gen_stats.side_effect = ["generated_stats_go_here"]
+
+        mock_calculate_cov.side_effect = [1000]
+
+        recursive_reliability.test_reliability("b", "a", 3, 999)
+
+        dig_count = 4
+        self.assertEqual(dig_count, mock_run_dig.call_count)
+        mock_run_dig.assert_has_calls([call(domain="a", target_server="b")]*dig_count)
+
+        self.assertEqual(1, mock_calculate_cov.call_count)
+
+        self.assertEqual(0, mock_gen_stats.call_count)
+
+        self.assertEqual(0, mock_print.call_count)

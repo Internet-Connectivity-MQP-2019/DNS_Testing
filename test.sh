@@ -7,11 +7,12 @@ JOB_COUNT=32
 MAXMIND_DB="GeoIP2-City.mmdb"
 RECURSIVE_CONFIRMATION_DOMAIN="cnn.com"
 RECURSIVE_RELIABILITY_DOMAIN="cnn.com"
-RECURSIVE_RELIABILITY_TRIAL_COUNT=50
-AUTHORITATIVE_RELIABILITY_TRIAL_COUNT=50
-TEST_TRIAL_COUNT="3"
-TEST_TRY_COUNT="5"
-TIMEOUT="5"
+RECURSIVE_RELIABILITY_TRIAL_COUNT=100
+AUTHORITATIVE_RELIABILITY_TRIAL_COUNT=100
+TEST_TRIAL_COUNT="5"
+TEST_TRY_COUNT="3"
+TIMEOUT="3"
+MAX_COV="0.2"
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 echo $TIMESTAMP > results/TEST_START
@@ -40,11 +41,11 @@ fi
 
 echo "Step 5"
 echo "ip_address,median,mean,standard_deviation,variance" > results/recursive_reliability_results.csv
-./parallel -a results/recursive_confirmed.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./recursive_reliability.py {1} $RECURSIVE_RELIABILITY_DOMAIN $RECURSIVE_RELIABILITY_TRIAL_COUNT >> results/recursive_reliability_results.csv
+./parallel -a results/recursive_confirmed.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./recursive_reliability.py {1} $RECURSIVE_RELIABILITY_DOMAIN $RECURSIVE_RELIABILITY_TRIAL_COUNT $MAX_COV >> results/recursive_reliability_results.csv
 
 echo "Step 6"
 echo "ip_address,median,mean,standard_deviation,variance" > results/authoritative_reliability_results.csv
-./parallel -a results/authoritative_confirmed.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./authoritative_reliability.py {1} {2} $AUTHORITATIVE_RELIABILITY_TRIAL_COUNT >> results/authoritative_reliability_results.csv
+./parallel -a results/authoritative_confirmed.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./authoritative_reliability.py {1} {2} $AUTHORITATIVE_RELIABILITY_TRIAL_COUNT $MAX_COV >> results/authoritative_reliability_results.csv
 
 echo "Step 7"
 echo "recursive_ip,authoritative_ip,domain" > results/test_pairs.csv
@@ -54,7 +55,7 @@ echo "Step 8"
 echo "recursive_ip,authoritative_ip,latency,total,rtt" > results/test_results.csv
 ./parallel -a results/test_pairs.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./run_test.py {1} {2} {3} $TEST_TRY_COUNT $TIMEOUT >> results/test_results.csv
 
-echo $(date +"%s") > results/TEST_END
+echo $(date +"%Y%m%d_%H%M%S") > results/TEST_END
 
 ./analysis.sh
 
