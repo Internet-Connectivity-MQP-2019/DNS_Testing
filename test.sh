@@ -7,8 +7,8 @@ JOB_COUNT=32
 MAXMIND_DB="GeoIP2-City.mmdb"
 RECURSIVE_CONFIRMATION_DOMAIN="cnn.com"
 RECURSIVE_RELIABILITY_DOMAIN="cnn.com"
-RECURSIVE_RELIABILITY_TRIAL_COUNT=100
-AUTHORITATIVE_RELIABILITY_TRIAL_COUNT=100
+RECURSIVE_RELIABILITY_TRIAL_COUNT=20
+AUTHORITATIVE_RELIABILITY_TRIAL_COUNT=20
 TEST_TRIAL_COUNT="5"
 TEST_TRY_COUNT="3"
 TIMEOUT="3"
@@ -47,11 +47,25 @@ echo "Step 6"
 echo "ip_address,median,mean,standard_deviation,variance" > results/authoritative_reliability_results.csv
 ./parallel -a results/authoritative_confirmed.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./authoritative_reliability.py {1} {2} $AUTHORITATIVE_RELIABILITY_TRIAL_COUNT $MAX_COV >> results/authoritative_reliability_results.csv
 
-echo "Step 7"
-echo "recursive_ip,authoritative_ip,domain" > results/test_pairs.csv
-./generate_pairs.py results/recursive_confirmed.csv results/authoritative_confirmed.csv $TEST_TRIAL_COUNT >> results/test_pairs.csv
+echo "Steps 7 & 8"
+echo "recursive_ip" > results/reliable_recursive_ips.csv
+./parallel -a results/recursive_reliability_results.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./filter_coefficient_of_variance.py {1} {2} {3} {4} {5} $COV_MAX >> results/reliable_recursive_ips.csv
+echo "authoritative_ip" > results/reliable_authoritative_ips.csv
+./parallel -a results/authoritative_reliability_results.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./filter_coefficient_of_variance.py {1} {2} {3} {4} {5} $COV_MAX >> results/reliable_authoritative_ips.csv
 
-echo "Step 8"
+echo "Actually Filtering..."
+echo "Step 9"
+echo "ip_address" > results/reliable_recursive_half.csv
+./parallel -a results/reliable_recursive_ips.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT grep {1} results/recursive_confirmed.csv >> results/reliable_recursive_half.csv
+echo "Step 10"
+echo "ip_address,domain" > results/reliable_authoritative_half.csv
+./parallel -a results/reliable_authoritative_ips.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT grep {1} results/authoritative_confirmed.csv >> results/reliable_authoritative_half.csv
+
+echo "Step 11"
+echo "recursive_ip,authoritative_ip,domain" > results/test_pairs.csv
+./generate_pairs.py results/reliable_recursive_half.csv results/reliable_authoritative_half.csv $TEST_TRIAL_COUNT >> results/test_pairs.csv
+
+echo "Step 12"
 echo "recursive_ip,authoritative_ip,latency,total,rtt" > results/test_results.csv
 ./parallel -a results/test_pairs.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./run_test.py {1} {2} {3} $TEST_TRY_COUNT $TIMEOUT >> results/test_results.csv
 
