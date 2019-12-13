@@ -59,7 +59,7 @@ def run_test(recursive_ip, auth_ip, domain, tries):
                 total_msg_size = m
         rtt = total - latency
 
-        print("{},{},{},{},{},{},{}".format(recursive_ip, auth_ip, latency, latency_msg_size, total, latency_msg_size, rtt))
+        print("{},{},{},{},{},{},{}".format(recursive_ip, auth_ip, latency, latency_msg_size, total, total_msg_size, rtt))
 
 
 if __name__ == "__main__":

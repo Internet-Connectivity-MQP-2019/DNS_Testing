@@ -5,7 +5,7 @@ import dig
 import run_test
 
 
-def build_result(rtt, msg_size):
+def build_result(rtt, msg_size=0):
     return dig.DigResults(answer=0, authority=12, additional=0, status="NOERROR",
                           responding_server="", answer_section=[], authority_section=[],
                           additional_section=[], query_time=rtt, msg_size=msg_size,
