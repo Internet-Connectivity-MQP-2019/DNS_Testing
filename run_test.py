@@ -33,23 +33,33 @@ def run_test(recursive_ip, auth_ip, domain, tries):
     run_dig(domain=domain, target_server=recursive_ip, time=TIME_LIMIT)
 
     # Step 2: Measure latency
-    latency_results = [r.query_time for r in
+    latency_results = [(r.query_time, r.msg_size) for r in
                        [run_dig(domain=domain, target_server=recursive_ip, time=TIME_LIMIT) for _ in range(tries)]
                        if r is not None]
 
     # Step 3: Measure total time
-    total_results = [r.query_time for r in
+    total_results = [(r.query_time, r.msg_size) for r in
                      [run_dig(domain="{}.{}".format(rand_subdomain(), domain),
                               target_server=recursive_ip, time=TIME_LIMIT) for _ in range(tries)]
                      if r is not None]
 
     # Report the results if we got enough data
     if len(latency_results) > 0 and len(total_results) > 0:
-        latency = min(latency_results)
-        total = min(total_results)
+        latency = 999999999999
+        latency_msg_size = 0 
+        for l, m in latency_results:
+            if l < latency:
+                latency = l
+                latency_msg_size = m
+        total = 9999999999
+        total_msg_size = 0
+        for t, m in total_results:
+            if t < total:
+                total = t
+                total_msg_size = m
         rtt = total - latency
 
-        print("{},{},{},{},{}".format(recursive_ip, auth_ip, latency, total, rtt))
+        print("{},{},{},{},{},{},{}".format(recursive_ip, auth_ip, latency, latency_msg_size, total, latency_msg_size, rtt))
 
 
 if __name__ == "__main__":

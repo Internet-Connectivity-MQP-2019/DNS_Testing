@@ -9,11 +9,11 @@ RECURSIVE_CONFIRMATION_DOMAIN="cnn.com"
 RECURSIVE_RELIABILITY_DOMAIN="cnn.com"
 RECURSIVE_RELIABILITY_TRIAL_COUNT=20
 AUTHORITATIVE_RELIABILITY_TRIAL_COUNT=20
-TEST_TRIAL_COUNT="5"
-TEST_TRY_COUNT="3"
-TIMEOUT="3"
-MAX_COV="0.2"
-COV_MAX="0.2"
+TEST_TRIAL_COUNT="10"
+TEST_TRY_COUNT="10"
+TIMEOUT="2"
+MAX_COV="0.5"
+COV_MAX="0.5"
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 echo $TIMESTAMP > results/TEST_START
@@ -38,6 +38,8 @@ if python -c "import geoip2" &> /dev/null; then
     ./geolocation.py $MAXMIND_DB results/authoritative_confirmed.csv >> results/geolocation.csv
 else
     echo 'Geolocation requires the python module "geoip2". Either run ./geolocation.sh on a different machine, or install the module.'
+    echo 'Adding in default geolocation.csv'
+    cp geolocation.csv ./results/
 fi
 
 echo "Step 5"
@@ -67,7 +69,7 @@ echo "recursive_ip,authoritative_ip,domain" > results/test_pairs.csv
 ./generate_pairs.py results/reliable_recursive_half.csv results/reliable_authoritative_half.csv $TEST_TRIAL_COUNT >> results/test_pairs.csv
 
 echo "Step 12"
-echo "recursive_ip,authoritative_ip,latency,total,rtt" > results/test_results.csv
+echo "recursive_ip,authoritative_ip,latency,latency_msg_size,total,total_msg_size,rtt" > results/test_results.csv
 ./parallel -a results/test_pairs.csv --colsep , --header '.*\n' --progress --eta --jobs $JOB_COUNT ./run_test.py {1} {2} {3} $TEST_TRY_COUNT $TIMEOUT >> results/test_results.csv
 
 echo $(date +"%Y%m%d_%H%M%S") > results/TEST_END
