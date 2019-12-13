@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, call
 import confirm_authoritative
-import dig
+from DigForPy import dig
 
 
 class MyTestCase(unittest.TestCase):

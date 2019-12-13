@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, call
 
-import dig
+from DigForPy import dig
 import run_test
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python3.4
 import sys
-from dig import run_dig
+from DigForPy.dig import run_dig
 
 
 def confirm_recursive(recursive_ip, domain):

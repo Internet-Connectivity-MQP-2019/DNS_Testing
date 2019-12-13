@@ -2,7 +2,7 @@
 import random
 import string
 import sys
-from dig import run_dig
+from DigForPy.dig import run_dig
 
 TIME_LIMIT = 2
 

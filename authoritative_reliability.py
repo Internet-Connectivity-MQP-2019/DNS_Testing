@@ -2,7 +2,7 @@
 import sys
 from statistics import mean, stdev
 
-from dig import run_dig
+from DigForPy.dig import run_dig
 from stat_utils import generate_statistics, calculate_coefficient_of_variation
 
 
