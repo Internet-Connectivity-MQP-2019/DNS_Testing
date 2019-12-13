@@ -16,9 +16,7 @@ jobs:
         os: ['ubuntu-latest']
     steps:
       - uses: actions/checkout@master
-        with:
-          ref: develop
-          submodules: true
+      - uses: textbook/git-checkout-submodule-action@2.0.0
       - name: Setup python
         uses: actions/setup-python@v1
         with:
